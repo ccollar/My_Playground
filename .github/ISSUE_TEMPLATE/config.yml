@@ -7,6 +7,6 @@ contact_links:
 issue_template:
   - name: Test Form
     description: Authorization
+    title: "[Update Authorization File] "
     labels: configuration
-    title: "[BUG] "
     file: test_form.yml
