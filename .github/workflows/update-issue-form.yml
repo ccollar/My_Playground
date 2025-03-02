@@ -23,7 +23,7 @@ jobs:
 
       - name: Update issue form
         run: |
-          yq e '.body[0].attributes.options = env(names)' -i .github/ISSUE_TEMPLATE/test_form.yml
+          yq e '.body[0].attributes.options = strenv(names)' -i .github/ISSUE_TEMPLATE/test_form.yml
 
       - name: Commit changes
         run: |
