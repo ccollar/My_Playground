@@ -1,4 +1,3 @@
-IMSLimitedUser@jxtra-dev.com:
-  Name: IMSLimitedUser@jxtra-dev.com
-IMSProduct@jxtra-dev.com:
-  Name: IMSProduct@jxtra-dev.com
+options:
+  - Name: IMSLimitedUser@jxtra-dev.com
+  - Name: IMSProduct@jxtra-dev.com
