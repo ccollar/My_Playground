@@ -1,9 +1,8 @@
 name: Update Issue Form with Options
 
 on:
-  push:
-    paths:
-      - '.github/ISSUE_TEMPLATE/authorization.yml'
+   issues:
+    types: [opened]
 
 jobs:
   update-issue-form:
