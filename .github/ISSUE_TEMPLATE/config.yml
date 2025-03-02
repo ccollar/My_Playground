@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support
+    url: https://example.com/support
+    about: Please visit our support page for assistance.
+
+issue_template:
+  - name: Test Form
+    description: Authorization
+    labels: configuration
+    title: "[BUG] "
+    file: test_form.yml
