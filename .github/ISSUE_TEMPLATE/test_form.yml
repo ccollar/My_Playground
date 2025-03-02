@@ -1,0 +1,11 @@
+name: Test Form
+description: Authorization
+title: "[Update Authorization File] "
+labels: configuration
+body:
+  - type: dropdown
+    id: Authorized Users
+    attributes:
+      label: Select an user
+      description: Choose one of the available user
+      options: []
