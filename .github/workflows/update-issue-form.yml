@@ -3,7 +3,7 @@ name: Update Issue Form with Options
 on:
   push:
     paths:
-      - '.github/ISSUE_TEMPLATE/authorization.yaml'
+      - '.github/ISSUE_TEMPLATE/authorization.yml'
 
 jobs:
   update-issue-form:
@@ -18,7 +18,7 @@ jobs:
       - name: Read options from YAML
         id: read_options
         run: |
-          names=$(yq e '.[] | .Name' .github/ISSUE_TEMPLATE/authorization.yaml)
+          names=$(yq e '.[] | .Name' .github/ISSUE_TEMPLATE/authorization.yml)
           echo "::set-output name=names::${names}"
 
       - name: Update issue form
