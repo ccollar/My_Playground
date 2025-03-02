@@ -1,8 +1,9 @@
 name: Update Issue Form with Options
 
 on:
-   issues:
-    types: [opened]
+   push:
+    paths:
+      - '.github/ISSUE_TEMPLATE/authorization.yml'
 
 jobs:
   update-issue-form:
@@ -23,3 +24,11 @@ jobs:
       - name: Update issue form
         run: |
           yq e '.body[0].attributes.options = env(names)' -i .github/ISSUE_TEMPLATE/test_form.yml
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add .github/ISSUE_TEMPLATE/bug_report.yml
+          git commit -m 'Update issue form options'
+          git push
