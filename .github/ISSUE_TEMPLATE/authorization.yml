@@ -1,2 +1,4 @@
-name: "IMSLimitedUser@jxtra-dev.com"
-name: "IMSProduct@jxtra-dev.com"
+IMSLimitedUser@jxtra-dev.com:
+  Name: IMSLimitedUser@jxtra-dev.com
+IMSProduct@jxtra-dev.com:
+  Name: IMSProduct@jxtra-dev.com
