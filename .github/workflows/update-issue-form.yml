@@ -3,7 +3,7 @@ name: Update Issue Form with Options
 on:
    push:
     paths:
-      - '.github/ISSUE_TEMPLATE/authorization.yml'
+      - 'configuration/authorization.yml'
 
 jobs:
   update-issue-form:
@@ -18,7 +18,7 @@ jobs:
       - name: Read options from YAML
         id: read_options
         run: |
-          names=$(yq e '.options[].Name' .github/ISSUE_TEMPLATE/options.yaml | yq -o=json | jq -R -s -c 'split("\n")[:-1]')
+          names=$(yq e '.options[].Name' configuration/authorization.yaml | yq -o=json | jq -R -s -c 'split("\n")[:-1]')
           echo "::set-output name=names::${names}"
 
       - name: Update issue form
@@ -29,6 +29,6 @@ jobs:
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add .github/ISSUE_TEMPLATE/bug_report.yml
+          git add .github/ISSUE_TEMPLATE/test_form.yml
           git commit -m 'Update issue form options'
           git push
