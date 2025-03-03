@@ -32,4 +32,3 @@ jobs:
           fi
           echo "Extracted email: $email"
           echo "email=$email" >> $GITHUB_ENV
-
