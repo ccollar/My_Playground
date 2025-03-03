@@ -4,14 +4,14 @@ labels: user-info
 title: "Update an Existing Authorized User"
 body:
   - type: dropdown
-    id: email
+    id: users
     attributes:
       label: Select A User
       description: Please select and existing user from the list
       options:
-        - label: IMSProduct@dev.jha
-        - label: EISProduct@jackhenry.com
-        - label: Chris_co@jhacorp.com
+        - IMSProduct@dev.jha
+        - EISProduct@jackhenry.com
+        - Chris_co@jhacorp.com
     
   - type: checkboxes
     id: operations
