@@ -11,20 +11,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Get Issue Body
-        id: get_body
-        run: |
-          echo "body=$(echo '${{ github.event.issue.body }}')" >> $GITHUB_OUTPUT
-
       - name: Log Issue Body
         run: |
           echo "The issue body is: "
-          echo "${{ steps.get_body.outputs.body }}"
+          echo "${{ github.event.issue.body }}"
 
       - name: Get Issue Data
         id: issue_data
         run: |
-          echo "user_name=$(echo '${{ steps.get_body.outputs.body }}' | awk '/### Add a New User/{f=1;next} /###/{f=0} f')" >> $GITHUB_OUTPUT
+          echo "user_name=$(echo '${{ github.event.issue.body }}' | awk '/### Add a New User/{f=1;next} /###/{f=0} f')" >> $GITHUB_OUTPUT
 
       - name: Log User Name
         run: |
