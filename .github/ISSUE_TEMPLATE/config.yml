@@ -5,3 +5,9 @@ issue_template:
     title: "Add New Authorized User"
     labels: user-info
     file: auth_add_form.yml
+
+  - name: Authorization Update
+    description: Authorization Update
+    title: "Update an Existing Authorized User"
+    labels: user-update
+    file: auth_update_form.yml
