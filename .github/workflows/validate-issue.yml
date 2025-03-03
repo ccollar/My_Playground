@@ -1,21 +1,37 @@
-name: Extract Input Value
+name: Extract Email
 
 on:
   issues:
     types: [opened]
 
+permissions:
+  issues: write
+
 jobs:
-  extract_value:
+  extract-email:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Get Issue Data
-        id: issue_data
+      - name: Install jq and GitHub CLI
         run: |
-          echo "user_name=$(echo '${{ github.event.issue.body }}' | sed -n '/### Add a New User/,/###/p' | grep -oE '[^ ]+$')" >> $GITHUB_OUTPUT
+          sudo apt-get update
+          sudo apt-get install -y jq gh
 
-      - name: Log User Name
+      - name: Debug GITHUB_EVENT_PATH
+        run: cat "$GITHUB_EVENT_PATH"
+
+      - name: Extract Email
+        id: extract_email
         run: |
-          echo "The user name is ${{ steps.issue_data.outputs.user_name }}"
+          email=$(jq -r '.issue.body | split("\n") | map(select(test("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))) | .[0]' "$GITHUB_EVENT_PATH")
+          if [ -z "$email" ]; then
+            echo "Email not found"
+            exit 1
+          fi
+          echo "Extracted email: $email"
+          echo "email=$email" >> $GITHUB_ENV
+
+      - name: Output Email
+        run: echo "Extracted email is: ${{ env.email }}"
