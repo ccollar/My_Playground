@@ -1,5 +1,5 @@
-name: Test Form
-description: Form for testing User Authorization Updates.
+name: Authorization Add
+description: Form for testing User Authorization Additions.
 labels: user-info
 title: "[Authorized User Configuration]"
 body:
