@@ -1,6 +1,6 @@
 name: Authorization Update
 description: Form for testing User Authorization Updates.
-labels: user-info
+labels: user-update
 title: "Update an Existing Authorized User"
 body:
   - type: dropdown
