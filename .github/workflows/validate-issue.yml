@@ -14,22 +14,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install GitHub CLI
-        run: sudo apt-get install -y gh
+      - name: Install yq and GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yq gh
 
       - name: Extract Email
         id: extract_email
         run: |
-          email=$(jq -r '.issue.body' "$GITHUB_EVENT_PATH" | grep -oP '(?<=Email Address: ).*')
+          email=$(yq e '.body[] | select(.id == "email") | .attributes.value' "$GITHUB_EVENT_PATH")
+          echo "Extracted email: $email"
           echo "::set-output name=email::$email"
 
       - name: Validate Email
         id: validate_email
         run: |
           email="${{ steps.extract_email.outputs.email }}"
+          echo "Validating email: $email"
           if [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
             echo "Invalid email format: $email"
             exit 1
+          else
+            echo "Valid email format: $email"
 
       - name: Close Issue
         if: failure()
