@@ -1,9 +1,4 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Support
-    url: https://example.com/support
-    about: Please visit our support page for assistance.
-
+blank_issues_enabled: true
 issue_template:
   - name: Test Form
     description: Authorization
