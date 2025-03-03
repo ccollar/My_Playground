@@ -1,18 +1,36 @@
 name: Test Form
-description: Report an issue related to user information.
+description: Form for testing User Authorization Updates.
 labels: ["user-info"]
+title: "[Authorized User Configuration]"
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Please provide your user information in the format `user@domain.com`.
   - type: input
-    id: user-name
+    id: user_name
     attributes:
       label: User Name
-      description: Your user name in the format user@domain.com.
-      placeholder: user@domain.com
+      description: Please enter your user name
+      placeholder: johndoe
     validations:
       required: true
-      regex: ".*@.*"
-      error: "Please provide a valid email address (user@domain.com)."     
+
+  - type: dropdown
+    id: user_dropdown
+    attributes:
+      label: Select User
+      description: Choose a user from the list
+      options:
+        - IMSUser@jha-dev.com
+        - Chris_co@jhadev.com
+        - RandomUser@jackhenry.com
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: operations
+    attributes:
+      label: Operations
+      description: Select the operations to perform
+      options:
+        - label: EESEventAdd
+        - label: EESEventSrch
+        - label: ESMAdd
+        - label: Ping
