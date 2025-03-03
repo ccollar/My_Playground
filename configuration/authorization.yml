@@ -1,3 +1,25 @@
-options:
-  - Name: IMSLimitedUser@jxtra-dev.com
-  - Name: IMSProduct@jxtra-dev.com
+IMSProduct@jxtra-dev.com:
+  Name: IMSProduct@jxtra-dev.com
+  InstitutionName: TestInstitution
+  IsFederated: false
+  Operations:
+  - Name: EESEventAdd
+    SoapAction: http://jackhenry.com/ws/EESEventAdd
+    GroupName: EnterpriseEvent
+    Description: EESEventAdd
+  - Name: BrdCstAdd
+    SoapAction: http://jackhenry.com/ws/BrdCstAdd
+    GroupName: EnterpriseEvent
+    Description: BrdCstAdd
+  - Name: ESMAdd
+    SoapAction: http://jackhenry.com/ws/ESMAdd
+    GroupName: EnterpriseEvent
+    Description: ESMAdd
+  - Name: EESEventSrch
+    SoapAction: http://jackhenry.com/ws/EESEventSrch
+    GroupName: EnterpriseEvent
+    Description: EESEventSrch
+  - Name: Ping
+    SoapAction: http://jackhenry.com/ws/Ping
+    GroupName: EnterpriseEvent
+    Description: Ping
