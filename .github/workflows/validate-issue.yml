@@ -32,6 +32,3 @@ jobs:
           fi
           echo "Extracted email: $email"
           echo "email=$email" >> $GITHUB_ENV
-
-      - name: Output Email
-        run: echo "Extracted email is: ${{ env.email }}"
