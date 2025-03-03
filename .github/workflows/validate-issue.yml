@@ -1,0 +1,55 @@
+name: Validate Issue Fields
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Get Issue Data
+        uses: actions/github-script@v6
+        id: issue_data
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body;
+            const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            const userNameLine = body.split('\n').find(line => line.startsWith('User Name:'));
+
+            if (userNameLine) {
+              const userName = userNameLine.split('User Name:')[1].trim();
+
+              if (!userNameRegex.test(userName)) {
+                return { valid: false, userName: userName };
+              } else {
+                return { valid: true };
+              }
+            } else {
+              return { valid: false, userName: "User Name field not found" };
+            }
+
+      - name: Handle Invalid Issue
+        if: steps.issue_data.outputs.valid == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const userName = ${{ steps.issue_data.outputs.userName }};
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: `Invalid User Name format: "${userName}". Please use the format user@domain.com.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              state: 'closed'
+            });
