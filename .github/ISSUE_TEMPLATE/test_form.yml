@@ -1,6 +1,6 @@
 name: Test Form
 description: Form for testing User Authorization Updates.
-labels: ["user-info"]
+labels: user-info
 title: "[Authorized User Configuration]"
 body:
   - type: input
