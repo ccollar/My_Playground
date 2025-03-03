@@ -18,6 +18,7 @@ body:
       label: Select Existing User
       description: Choose a user from the list
       options:
+        - Select A User
         - IMSUser@jha-dev.com
         - Chris_co@jhadev.com
         - RandomUser@jackhenry.com
