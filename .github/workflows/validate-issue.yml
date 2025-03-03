@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   extract-email:
+    if: contains(github.event.issue.labels.*.name, 'user-info')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
