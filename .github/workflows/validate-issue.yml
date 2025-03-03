@@ -16,7 +16,6 @@ jobs:
         id: issue_data
         with:
           script: |
-            const core = require('@actions/core');
             const issue = context.payload.issue;
             let body = issue.body.replace(/\r\n/g, '\n');
             const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
