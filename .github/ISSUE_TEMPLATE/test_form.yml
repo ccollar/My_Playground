@@ -12,18 +12,6 @@ body:
     validations:
       required: true
 
-  - type: dropdown
-    id: user_dropdown
-    attributes:
-      label: Select Existing User
-      description: Choose a user from the list
-      options:
-        - IMSUser@jha-dev.com
-        - Chris_co@jhadev.com
-        - RandomUser@jackhenry.com
-    validations:
-      required: true
-
   - type: checkboxes
     id: operations
     attributes:
