@@ -6,16 +6,16 @@ body:
   - type: input
     id: user_name
     attributes:
-      label: User Name
+      label: Add a New User
       description: Please enter your user name
-      placeholder: johndoe
+      placeholder: user@domain.com
     validations:
       required: true
 
   - type: dropdown
     id: user_dropdown
     attributes:
-      label: Select User
+      label: Select Existing User
       description: Choose a user from the list
       options:
         - IMSUser@jha-dev.com
@@ -28,7 +28,7 @@ body:
     id: operations
     attributes:
       label: Operations
-      description: Select the operations to perform
+      description: Select the operations to allow
       options:
         - label: EESEventAdd
         - label: EESEventSrch
