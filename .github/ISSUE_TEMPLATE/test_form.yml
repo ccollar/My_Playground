@@ -2,12 +2,7 @@ name: Test Form
 description: Authorization
 title: "[Update Authorization File] "
 labels: configuration
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Please fill out the following details
-        
+body:     
   - type: input
     id: User
     attributes:
