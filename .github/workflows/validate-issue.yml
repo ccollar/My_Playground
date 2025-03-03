@@ -16,9 +16,12 @@ jobs:
         id: issue_data
         with:
           script: |
+            const core = require('@actions/core');
             const issue = context.payload.issue;
-            let body = issue.body.replace(/\r\n/g, '\n'); // Normalize line endings
+            let body = issue.body.replace(/\r\n/g, '\n');
             const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            core.info(`Raw Issue Body: ${body}`); // Debug: Print the issue body
 
             const userNameSectionStart = body.indexOf('### User Name');
             if (userNameSectionStart !== -1) {
@@ -26,6 +29,8 @@ jobs:
               const userNameEnd = body.indexOf('\n', userNameStart);
               if (userNameStart !== -1 && userNameEnd !== -1){
                 const userName = body.substring(userNameStart, userNameEnd).trim();
+
+                core.info(`Extracted User Name: ${userName}`); // Debug: Print the extracted username
 
                 if (!userNameRegex.test(userName)) {
                   return { valid: false, userName: userName };
@@ -38,23 +43,3 @@ jobs:
             } else {
               return { valid: false, userName: "User Name field not found" };
             }
-
-      - name: Handle Invalid Issue
-        if: steps.issue_data.outputs.valid == 'false'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const issue = context.payload.issue;
-            const userName = ${{ steps.issue_data.outputs.userName }};
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue.number,
-              body: `Invalid User Name format: "${userName}". Please use the format user@domain.com.`
-            });
-            await github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue.number,
-              state: 'closed'
-            });
