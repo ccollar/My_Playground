@@ -1,7 +1,7 @@
 blank_issues_enabled: true
 issue_template:
-  - name: Test Form
-    description: Authorization
-    title: "[Update Authorization File] "
+  - name: Authorization Add
+    description: Authorization Add
+    title: "Add New Authorized User"
     labels: user-info
-    file: test_form.yml
+    file: auth_add_form.yml
