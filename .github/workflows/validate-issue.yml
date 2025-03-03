@@ -1,65 +1,21 @@
-name: Validate Issue Fields
+name: Extract Input Value
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  validate:
+  extract_value:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Get Issue Data
-        uses: actions/github-script@v6
         id: issue_data
-        with:
-          script: |
-            const issue = context.payload.issue;
-            let body = issue.body.replace(/\r\n/g, '\n');
-            const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        run: |
+          echo "user_name=$(echo '${{ toJSON(github.event.issue.body) }}' | jq -r '.| select(.id == \"email\") | .attributes.value')" >> $GITHUB_OUTPUT
 
-            core.info(`Raw Issue Body: ${body}`);
-
-            // Use a regular expression to extract the username (updated to use the correct ID)
-            const userNameMatch = body.match(/### Add a New User\n(.*)/); 
-            if (userNameMatch && userNameMatch[1]) {
-              let userName = userNameMatch[1].trim();
-
-              core.info(`Extracted User Name (before trim): "${userName}"`);
-              core.info(`User Name Length: ${userName.length}`);
-              core.info(`User Name Char Codes: ${[...userName].map(c => c.charCodeAt(0))}`);
-
-              userName = userName.trim();
-
-              core.info(`Extracted User Name (after trim): "${userName}"`);
-
-              if (!userNameRegex.test(userName)) {
-                return { valid: false, userName: userName };
-              } else {
-                return { valid: true };
-              }
-            } else {
-              return { valid: false, userName: "User Name field not found" };
-            }
-
-      - name: Handle Invalid Issue
-        if: steps.issue_data.outputs.valid == 'false'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const issue = context.payload.issue;
-            const userName = ${{ steps.issue_data.outputs.userName }};
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue.number,
-              body: `Invalid User Name format: "${userName}". Please use the format user@domain.com.`
-            });
-            await github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue.number,
-              state: 'closed'
-            });
+      - name: Log User Name
+        run: |
+          echo "The user name is ${{ steps.issue_data.outputs.user_name }}"
