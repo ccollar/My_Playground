@@ -1,53 +1,71 @@
-name: Validate Email Format
+name: Validate Issue Fields
 
 on:
   issues:
     types: [opened]
 
-permissions:
-  issues: write
-
 jobs:
-  validate-email:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Install jq and GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq gh
+      - name: Get Issue Data
+        uses: actions/github-script@v6
+        id: issue_data
+        with:
+          script: |
+            const issue = context.payload.issue;
+            let body = issue.body.replace(/\r\n/g, '\n');
+            const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-      - name: Debug GITHUB_EVENT_PATH
-        run: cat "$GITHUB_EVENT_PATH"
+            core.info(`Raw Issue Body: ${body}`);
 
-      - name: Extract Email
-        id: extract_email
-        run: |
-          body=$(jq -r '.body' "$GITHUB_EVENT_PATH")
-          email=$(echo "$body" | grep -E -o "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
-          if [ -z "$email" ]; then
-            echo "Email not found"
-            exit 1
-          fi
-          echo "Extracted email: $email"
-          echo "::set-output name=email::$email"
+            const userNameSectionStart = body.indexOf('### Add a New User');
+            if (userNameSectionStart !== -1) {
+              const userNameStart = body.indexOf('\n', userNameSectionStart) + 1;
+              const userNameEnd = body.indexOf('\n', userNameStart);
+              if (userNameStart !== -1 && userNameEnd !== -1) {
+                let userName = body.substring(userNameStart, userNameEnd).trim();
 
-      - name: Validate Email
-        id: validate_email
-        run: |
-          email="${{ steps.extract_email.outputs.email }}"
-          echo "Validating email: $email"
-          if [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-            echo "Invalid email format: $email"
-            exit 1
-          else
-            echo "Valid email format: $email"
+                // Additional debugging to check for unexpected characters
+                core.info(`Extracted User Name (before trim): "${userName}"`);
+                core.info(`User Name Length: ${userName.length}`);
+                core.info(`User Name Char Codes: ${[...userName].map(c => c.charCodeAt(0))}`);
 
-      - name: Close Issue
-        if: failure()
-        run: |
-          gh issue close ${{ github.event.issue.number }} --comment "The email address provided is invalid. Please use the format user@domain.com."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                userName = userName.trim(); // Trim any leading/trailing whitespace
+
+                core.info(`Extracted User Name (after trim): "${userName}"`);
+
+                if (!userNameRegex.test(userName)) {
+                  return { valid: false, userName: userName };
+                } else {
+                  return { valid: true };
+                }
+              } else {
+                return { valid: false, userName: "Could not parse username" };
+              }
+            } else {
+              return { valid: false, userName: "User Name field not found" };
+            }
+
+      - name: Handle Invalid Issue
+        if: steps.issue_data.outputs.valid == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const userName = ${{ steps.issue_data.outputs.userName }};
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: `Invalid User Name format: "${userName}". Please use the format user@domain.com.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              state: 'closed'
+            });
