@@ -1,4 +1,4 @@
-name: User Information Issue
+name: Test Form
 description: Report an issue related to user information.
 labels: ["user-info"]
 body:
