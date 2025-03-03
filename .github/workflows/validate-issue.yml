@@ -20,16 +20,23 @@ jobs:
             let body = issue.body.replace(/\r\n/g, '\n');
             const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            core.info(`Raw Issue Body: ${body}`); // Debug: Print the issue body
+            core.info(`Raw Issue Body: ${body}`);
 
             const userNameSectionStart = body.indexOf('### User Name');
             if (userNameSectionStart !== -1) {
               const userNameStart = body.indexOf('\n', userNameSectionStart) + 1;
               const userNameEnd = body.indexOf('\n', userNameStart);
-              if (userNameStart !== -1 && userNameEnd !== -1){
-                const userName = body.substring(userNameStart, userNameEnd).trim();
+              if (userNameStart !== -1 && userNameEnd !== -1) {
+                let userName = body.substring(userNameStart, userNameEnd).trim();
 
-                core.info(`Extracted User Name: ${userName}`); // Debug: Print the extracted username
+                // Additional debugging to check for unexpected characters
+                core.info(`Extracted User Name (before trim): "${userName}"`);
+                core.info(`User Name Length: ${userName.length}`);
+                core.info(`User Name Char Codes: ${[...userName].map(c => c.charCodeAt(0))}`);
+
+                userName = userName.trim(); // Trim any leading/trailing whitespace
+
+                core.info(`Extracted User Name (after trim): "${userName}"`);
 
                 if (!userNameRegex.test(userName)) {
                   return { valid: false, userName: userName };
@@ -37,8 +44,28 @@ jobs:
                   return { valid: true };
                 }
               } else {
-                return {valid: false, userName: "Could not parse username"}
+                return { valid: false, userName: "Could not parse username" };
               }
             } else {
               return { valid: false, userName: "User Name field not found" };
             }
+
+      - name: Handle Invalid Issue
+        if: steps.issue_data.outputs.valid == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const userName = ${{ steps.issue_data.outputs.userName }};
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: `Invalid User Name format: "${userName}". Please use the format user@domain.com.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              state: 'closed'
+            });
