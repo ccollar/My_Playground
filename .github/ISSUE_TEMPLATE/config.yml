@@ -3,5 +3,5 @@ issue_template:
   - name: Test Form
     description: Authorization
     title: "[Update Authorization File] "
-    labels: configuration
+    labels: user-info
     file: test_form.yml
