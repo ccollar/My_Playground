@@ -26,9 +26,18 @@ jobs:
         id: extract_email
         run: |
           email=$(jq -r '.issue.body | split("\n") | map(select(test("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))) | .[0]' "$GITHUB_EVENT_PATH")
-          if [ -z "$email" ]; then
+          if [ -z "$email" ] || [ "$email" == "null" ]; then
             echo "Email not found"
+            echo "email=null" >> $GITHUB_ENV
             exit 1
           fi
           echo "Extracted email: $email"
           echo "email=$email" >> $GITHUB_ENV
+          
+      - name: Close Issue if Email Not Found
+        if: failure()
+        run: |
+          gh issue close ${{ github.event.issue.number }} --comment "The email address provided is invalid or missing. Please use the format user@domain.com."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
