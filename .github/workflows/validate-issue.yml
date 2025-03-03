@@ -20,15 +20,20 @@ jobs:
             const body = issue.body;
             const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            const userNameLine = body.split('\n').find(line => line.startsWith('User Name:'));
+            const userNameSectionStart = body.indexOf('### User Name');
+            if (userNameSectionStart !== -1) {
+              const userNameStart = body.indexOf('\n', userNameSectionStart) + 1;
+              const userNameEnd = body.indexOf('\n', userNameStart);
+              if (userNameStart !== -1 && userNameEnd !== -1){
+                const userName = body.substring(userNameStart, userNameEnd).trim();
 
-            if (userNameLine) {
-              const userName = userNameLine.split('User Name:')[1].trim();
-
-              if (!userNameRegex.test(userName)) {
-                return { valid: false, userName: userName };
+                if (!userNameRegex.test(userName)) {
+                  return { valid: false, userName: userName };
+                } else {
+                  return { valid: true };
+                }
               } else {
-                return { valid: true };
+                return {valid: false, userName: "Could not parse username"}
               }
             } else {
               return { valid: false, userName: "User Name field not found" };
