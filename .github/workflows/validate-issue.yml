@@ -17,7 +17,7 @@ jobs:
         with:
           script: |
             const issue = context.payload.issue;
-            const body = issue.body;
+            let body = issue.body.replace(/\r\n/g, '\n'); // Normalize line endings
             const userNameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
             const userNameSectionStart = body.indexOf('### User Name');
