@@ -22,29 +22,23 @@ jobs:
 
             core.info(`Raw Issue Body: ${body}`);
 
-            const userNameSectionStart = body.indexOf('### Add a New User');
-            if (userNameSectionStart !== -1) {
-              const userNameStart = body.indexOf('\n', userNameSectionStart) + 1;
-              const userNameEnd = body.indexOf('\n', userNameStart);
-              if (userNameStart !== -1 && userNameEnd !== -1) {
-                let userName = body.substring(userNameStart, userNameEnd).trim();
+            // Use a regular expression to extract the username (updated to use the correct ID)
+            const userNameMatch = body.match(/### Add a New User\n(.*)/); 
+            if (userNameMatch && userNameMatch[1]) {
+              let userName = userNameMatch[1].trim();
 
-                // Additional debugging to check for unexpected characters
-                core.info(`Extracted User Name (before trim): "${userName}"`);
-                core.info(`User Name Length: ${userName.length}`);
-                core.info(`User Name Char Codes: ${[...userName].map(c => c.charCodeAt(0))}`);
+              core.info(`Extracted User Name (before trim): "${userName}"`);
+              core.info(`User Name Length: ${userName.length}`);
+              core.info(`User Name Char Codes: ${[...userName].map(c => c.charCodeAt(0))}`);
 
-                userName = userName.trim(); // Trim any leading/trailing whitespace
+              userName = userName.trim();
 
-                core.info(`Extracted User Name (after trim): "${userName}"`);
+              core.info(`Extracted User Name (after trim): "${userName}"`);
 
-                if (!userNameRegex.test(userName)) {
-                  return { valid: false, userName: userName };
-                } else {
-                  return { valid: true };
-                }
+              if (!userNameRegex.test(userName)) {
+                return { valid: false, userName: userName };
               } else {
-                return { valid: false, userName: "Could not parse username" };
+                return { valid: true };
               }
             } else {
               return { valid: false, userName: "User Name field not found" };
