@@ -1,0 +1,25 @@
+name: Authorization Update
+description: Form for testing User Authorization Updates.
+labels: user-info
+title: "Update an Existing Authorized User"
+body:
+  - type: dropdown
+    id: email
+    attributes:
+      label: Select A User
+      description: Please select and existing user from the list
+      options:
+        - label: IMSProduct@dev.jha
+        - label: EISProduct@jackhenry.com
+        - label: Chris_co@jhacorp.com
+    
+  - type: checkboxes
+    id: operations
+    attributes:
+      label: Operations
+      description: Select the operations to allow
+      options:
+        - label: EESEventAdd
+        - label: EESEventSrch
+        - label: ESMAdd
+        - label: Ping
