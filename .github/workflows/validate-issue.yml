@@ -14,7 +14,7 @@ jobs:
       - name: Get Issue Data
         id: issue_data
         run: |
-          echo "user_name=$(echo '${{ toJSON(github.event.issue.body) }}' | jq -r '.| select(.id == \"email\") | .attributes.value')" >> $GITHUB_OUTPUT
+          echo "user_name=$(echo '${{ github.event.issue.body }}' | sed -n '/### Add a New User/,/###/p' | awk 'NR==2' | tr -d '\r')" >> $GITHUB_OUTPUT
 
       - name: Log User Name
         run: |
