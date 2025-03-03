@@ -4,12 +4,18 @@ on:
   issues:
     types: [opened]
 
+permissions:
+  issues: write
+
 jobs:
   validate-email:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
 
       - name: Extract Email
         id: extract_email
@@ -24,11 +30,10 @@ jobs:
           if [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
             echo "Invalid email format: $email"
             exit 1
-          fi
 
       - name: Close Issue
         if: failure()
-        uses: peter-evans/close-issue@v2
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          comment: "The email address provided is invalid. Please use the format user@domain.com."
+        run: |
+          gh issue close ${{ github.event.issue.number }} --comment "The email address provided is invalid. Please use the format user@domain.com."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
