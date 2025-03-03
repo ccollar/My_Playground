@@ -1,15 +1,18 @@
-name: Test Form
-description: Authorization
-title: "[Update Authorization File] "
-labels: configuration
-body:     
-  - type: input
-    id: User
+name: User Information Issue
+description: Report an issue related to user information.
+labels: ["user-info"]
+body:
+  - type: markdown
     attributes:
-      label: Enter an user
-      description: Enter a user name to add
-      placeholder: user@doman.com
-      validations:
-        regex: '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'
-        error: "Please enter a valid user profile"
-      
+      value: |
+        Please provide your user information in the format `user@domain.com`.
+  - type: input
+    id: user-name
+    attributes:
+      label: User Name
+      description: Your user name in the format user@domain.com.
+      placeholder: user@domain.com
+    validations:
+      required: true
+      regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+      error: "Please provide a valid email address (user@domain.com)."     
