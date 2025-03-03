@@ -1,7 +1,7 @@
 name: Authorization Add
 description: Form for testing User Authorization Additions.
 labels: user-info
-title: "[Authorized User Configuration]"
+title: "Add an New Authorized User"
 body:
   - type: input
     id: email
