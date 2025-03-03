@@ -19,10 +19,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y yq gh
 
+      - name: Debug GITHUB_EVENT_PATH
+        run: cat "$GITHUB_EVENT_PATH"
+
       - name: Extract Email
         id: extract_email
         run: |
           email=$(yq e '.body[] | select(.id == "email") | .attributes.value' "$GITHUB_EVENT_PATH")
+          if [ -z "$email" ]; then
+            echo "Email not found"
+            exit 1
+          fi
           echo "Extracted email: $email"
           echo "::set-output name=email::$email"
 
