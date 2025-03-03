@@ -4,10 +4,10 @@ labels: ["user-info"]
 title: "[Authorized User Configuration]"
 body:
   - type: input
-    id: user_name
+    id: email
     attributes:
       label: Add a New User
-      description: Please enter your user name
+      description: Please enter your user name in the format user@domain.com
       placeholder: user@domain.com
     validations:
       required: true
@@ -18,7 +18,6 @@ body:
       label: Select Existing User
       description: Choose a user from the list
       options:
-        - Select A User
         - IMSUser@jha-dev.com
         - Chris_co@jhadev.com
         - RandomUser@jackhenry.com
