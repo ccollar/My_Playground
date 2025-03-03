@@ -14,10 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install yq and GitHub CLI
+      - name: Install jq and GitHub CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y yq gh
+          sudo apt-get install -y jq gh
 
       - name: Debug GITHUB_EVENT_PATH
         run: cat "$GITHUB_EVENT_PATH"
@@ -25,7 +25,8 @@ jobs:
       - name: Extract Email
         id: extract_email
         run: |
-          email=$(yq e '.body[] | select(.id == "email") | .attributes.value' "$GITHUB_EVENT_PATH")
+          body=$(jq -r '.body' "$GITHUB_EVENT_PATH")
+          email=$(echo "$body" | grep -E -o "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
           if [ -z "$email" ]; then
             echo "Email not found"
             exit 1
