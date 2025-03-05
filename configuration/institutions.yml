@@ -1,0 +1,63 @@
+112233445_QAPROD:
+  Name: 2nd National Bank
+  City: Springfield
+  State: MI
+  Country: US
+  Aba: 112233445
+  Environment: QAPROD
+121212121_MYENV:
+  Name: My Institution
+  City: Boise
+  State: ID
+  Country: CA
+  Aba: 121212121
+  Environment: MYENV
+123456789_PROD:
+  Name: TestInst4
+  City: test_city4
+  State: NM
+  Country: USA
+  Aba: 123456789
+  Environment: PROD
+200000017_PROD:
+  Name: TestInst1
+  City: test_city1
+  State: NM
+  Country: USA
+  Aba: 200000017
+  Environment: PROD
+222333444_TSTENV:
+  Name: Jasper Co Bank
+  City: Billings
+  State: MO
+  Country: USA
+  Aba: 222333444
+  Environment: TSTENV
+242071509_PROD:
+  Name: 'NetTeller #491'
+  City: Monett
+  State: MO
+  Country: US
+  Aba: 242071509
+  Environment: PROD
+712300014_PROD:
+  Name: TestInst2
+  City: test_city2
+  State: NM
+  Country: USA
+  Aba: 712300014
+  Environment: PROD
+712300108_PROD:
+  Name: TestInst3
+  City: test_city3
+  State: NM
+  Country: USA
+  Aba: 712300108
+  Environment: PROD
+787878787_NEWPROD:
+  Name: New Bank
+  City: Homer
+  State: AL
+  Country: US
+  Aba: 787878787
+  Environment: NEWPROD
